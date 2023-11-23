@@ -2,8 +2,8 @@ import { createSecp256k1PeerId } from '@libp2p/peer-id-factory';
 import { Discv5, SignableENR } from "@chainsafe/discv5";
 import { multiaddr } from "@multiformats/multiaddr";
 import debug from 'debug';
-const log = debug('discv5');
-log.enabled = true;
+const log = debug('discv5:cli');
+// log.enabled = true;
 
 (async () => {
   const peerId = await createSecp256k1PeerId();
