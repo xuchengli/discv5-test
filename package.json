@@ -1,0 +1,26 @@
+{
+  "name": "discv5-test",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xuchengli/discv5-test.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xuchengli/discv5-test/issues"
+  },
+  "homepage": "https://github.com/xuchengli/discv5-test#readme",
+  "dependencies": {
+    "@chainsafe/discv5": "^5.1.2",
+    "@libp2p/peer-id-factory": "^3.0.8",
+    "@multiformats/multiaddr": "^12.1.10",
+    "debug": "^4.3.4"
+  }
+}
