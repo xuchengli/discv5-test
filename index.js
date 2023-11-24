@@ -1,5 +1,6 @@
 import fs from 'fs';
 import ip from 'ip';
+import os from 'os';
 import { createFromJSON } from '@libp2p/peer-id-factory';
 import { Discv5, ENR } from "@chainsafe/discv5";
 import { multiaddr } from "@multiformats/multiaddr";
@@ -23,7 +24,7 @@ const log = debug('discv5:cli');
     },
   });
 
-  const bootstrapEnrs = fs.readFileSync('bootstrap-enrs', "utf-8").split('\n').map(str => ENR.decodeTxt(str));
+  const bootstrapEnrs = fs.readFileSync('bootstrap-enrs', "utf-8").split(os.EOL).map(str => ENR.decodeTxt(str));
   bootstrapEnrs.forEach(enr => {
     log('adding bootstrap enr: %s', enr.encodeTxt());
     log('bootstrap enr multiaddr: %s', enr.getLocationMultiaddr('udp'));
