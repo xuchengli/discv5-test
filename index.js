@@ -1,31 +1,34 @@
 import fs from 'fs';
+import ip from 'ip';
 import { createFromJSON } from '@libp2p/peer-id-factory';
-import { Discv5, ENR, SignableENR } from "@chainsafe/discv5";
+import { Discv5, ENR } from "@chainsafe/discv5";
 import { multiaddr } from "@multiformats/multiaddr";
 import debug from 'debug';
 const log = debug('discv5:cli');
 // log.enabled = true;
 
-const bootNodes = [
-  'enr:-IS4QLkKqDMy_ExrpOEWa59NiClemOnor-krjp4qoeZwIw2QduPC-q7Kz4u1IOWf3DDbdxqQIgC4fejavBOuUPy-HE4BgmlkgnY0gmlwhCLzAHqJc2VjcDI1NmsxoQLQSJfEAHZApkm5edTCZ_4qps_1k_ub2CxHFxi-gr2JMIN1ZHCCIyg',
-  'enr:-IS4QDAyibHCzYZmIYZCjXwU9BqpotWmv2BsFlIq1V31BwDDMJPFEbox1ijT5c2Ou3kvieOKejxuaCqIcjxBjJ_3j_cBgmlkgnY0gmlwhAMaHiCJc2VjcDI1NmsxoQJIdpj_foZ02MXz4It8xKD7yUHTBx7lVFn3oeRP21KRV4N1ZHCCIyg',
-];
-
 (async () => {
   const peerId = await createFromJSON(JSON.parse(fs.readFileSync('peer-id.json', "utf-8")));
-  log('peer id: %s', peerId.toString());
+  log('local peer id: %s', peerId.toString());
 
-  const enr = SignableENR.createFromPeerId(peerId);
-  log('enr: %s', enr.encodeTxt());
+  const enr = fs.readFileSync('local-enr', "utf-8").trim();
+  log('local enr: %s', enr);
+  log('local enr multiaddr: %s', ENR.decodeTxt(enr).getLocationMultiaddr('udp'));
 
-  const bindAddrs = {
-    ip4: multiaddr('/ip4/192.168.1.174/udp/5000'),
-  };
+  const discv5 = Discv5.create({
+    enr,
+    peerId,
+    bindAddrs: {
+      ip4: multiaddr(`/ip4/${ip.address()}/udp/5000`),
+    },
+  });
 
-  const discv5 = Discv5.create({ enr, peerId, bindAddrs });
-  bootNodes.forEach(node => {
-    log("Adding bootstrap enr: %s", node);
-    discv5.addEnr(ENR.decodeTxt(node));
+  const bootstrapEnrs = fs.readFileSync('bootstrap-enrs', "utf-8").split('\n').map(str => ENR.decodeTxt(str));
+  bootstrapEnrs.forEach(enr => {
+    log('adding bootstrap enr: %s', enr.encodeTxt());
+    log('bootstrap enr multiaddr: %s', enr.getLocationMultiaddr('udp'));
+
+    discv5.addEnr(enr);
   });
   await discv5.start();
   log("Service started on %s with local node id: %s", discv5.bindAddrs, discv5.enr.nodeId);

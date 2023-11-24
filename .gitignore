@@ -131,3 +131,4 @@ dist
 
 peer-id.json
 local-enr
+bootstrap-enrs
