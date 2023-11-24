@@ -24,7 +24,7 @@ const log = debug('discv5:cli');
     },
   });
 
-  const bootstrapEnrs = fs.readFileSync('bootstrap-enrs', "utf-8").split(os.EOL).map(str => ENR.decodeTxt(str));
+  const bootstrapEnrs = fs.readFileSync('bootstrap-enrs', "utf-8").split(os.EOL).filter(Boolean).map(str => ENR.decodeTxt(str));
   bootstrapEnrs.forEach(enr => {
     log('adding bootstrap enr: %s', enr.encodeTxt());
     log('bootstrap enr multiaddr: %s', enr.getLocationMultiaddr('udp'));
