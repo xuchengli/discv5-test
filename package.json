@@ -22,6 +22,7 @@
     "@libp2p/peer-id-factory": "^3.0.8",
     "@multiformats/multiaddr": "^12.1.10",
     "debug": "^4.3.4",
+    "ip": "^1.1.8",
     "uint8arrays": "^4.0.6"
   }
 }

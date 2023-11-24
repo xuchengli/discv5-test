@@ -130,3 +130,4 @@ dist
 .pnp.*
 
 peer-id.json
+local-enr
