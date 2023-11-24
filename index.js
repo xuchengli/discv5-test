@@ -36,7 +36,7 @@ const log = debug('discv5:cli');
 
   while (discv5.isStarted()) {
     const nearest = await discv5.findRandomNode();
-    log('found the nearest nodes: %s', nearest);
+    log('found the nearest nodes: %s', nearest.map(enr => enr.encodeTxt()));
 
     log("%d total enrs in the table", discv5.kadValues().length);
     log("%d total connected peers", discv5.connectedPeerCount);
